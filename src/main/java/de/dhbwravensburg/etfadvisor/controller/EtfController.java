@@ -49,4 +49,12 @@ public class EtfController {
                 .toList();
 
     }
+
+    @GetMapping("/signal/{signal}")
+    public List<Etf> getBySignal(@PathVariable String signal){
+        return this.etfs.stream()
+                .filter(etf -> etf.getSignal().equalsIgnoreCase(signal))
+                .toList();
+
+    }
 }
