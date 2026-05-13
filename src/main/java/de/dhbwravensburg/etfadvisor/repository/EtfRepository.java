@@ -12,9 +12,9 @@ public interface EtfRepository extends JpaRepository<Etf, Long> {
     List<Etf> findByDividendPolicyIgnoreCase(String dividendPolicy);
     List<Etf> findBySignalIgnoreCase(String signal);
 
-    Optional<Etf> findById(long id);
+    Optional<Etf> findById(Long id);
     Optional<Etf> findByTickerIgnoreCase(String ticker);
-    Optional<Etf> findByIsin(long isin);
+    Optional<Etf> findByIsin(String isin);
 
 
 }
