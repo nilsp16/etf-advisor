@@ -1,60 +1,104 @@
 package de.dhbwravensburg.etfadvisor.controller;
 
 
+import de.dhbwravensburg.etfadvisor.dto.EtfRequest;
+import de.dhbwravensburg.etfadvisor.dto.EtfResponse;
 import de.dhbwravensburg.etfadvisor.entity.Etf;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import de.dhbwravensburg.etfadvisor.mapper.EtfMapper;
+import de.dhbwravensburg.etfadvisor.service.EtfService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/etfs")
 public class EtfController {
-    private final List<Etf> etfs = Etf.generateTestData();
+
+
+    private final EtfService etfService;
+
+    public EtfController(EtfService etfService){
+        this.etfService = etfService;
+    }
 
     @GetMapping
-    public List<Etf> getAll(){
-        return this.etfs;
+    public List<EtfResponse> getAll(){
+        return this.etfService.findAll().stream()
+                .map(EtfMapper :: toResponse )
+                .toList();
     }
 
     @GetMapping("/{id}")
-    public Etf getById(@PathVariable long id){
-        return this.etfs.stream()
-                .filter(etf -> etf.getId() == id)
-                .findFirst()
-                .orElse(null);
+    public ResponseEntity<EtfResponse> getById(@PathVariable long id){
+       return this.etfService.findById(id)
+               .map(EtfMapper :: toResponse )
+               .map(ResponseEntity :: ok)
+               .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/isin/{isin}")
-    public  Etf getByIsin(@PathVariable String isin){
-        return this.etfs.stream()
-                .filter(etf -> etf.getIsin().equals(isin))
-                .findFirst()
-                .orElse(null);
+    public  ResponseEntity<EtfResponse> getByIsin(@PathVariable String isin){
+        return this.etfService.findByIsin(isin)
+                .map(EtfMapper::toResponse)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
-    /*@GetMapping("/accumulating")
-    public List<Etf> getAccumulating(){
-        return this.etfs.stream()
-                .filter(etf -> etf.getDividendPolicy().equalsIgnoreCase("Accumulating"))
-                .toList();
 
-    }*/
+
 
     @GetMapping("/dividend/{dividendPolicy}")
-    public List<Etf> getByDividendPolicy(@PathVariable String dividendPolicy){
-        return this.etfs.stream()
-                .filter(etf -> etf.getDividendPolicy().equalsIgnoreCase(dividendPolicy))
+    public List<EtfResponse> getByDividendPolicy(@PathVariable String dividendPolicy){
+        return this.etfService.findByDividendPolicy(dividendPolicy)
+                .stream()
+                .map(EtfMapper::toResponse)
                 .toList();
 
     }
 
-    @GetMapping("/signal/{signal}")
-    public List<Etf> getBySignal(@PathVariable String signal){
-        return this.etfs.stream()
-                .filter(etf -> etf.getSignal().equalsIgnoreCase(signal))
+
+    @GetMapping("/ticker/{ticker}")
+    public  ResponseEntity<EtfResponse> getByTicker(@PathVariable String ticker){
+        return this.etfService.findByTicker(ticker)
+                .map(entity ->EtfMapper.toResponse(entity))
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("signal/{signal}")
+    public  List<EtfResponse> getBySignal(@PathVariable String signal){
+        return  this.etfService.findBySignal(signal)
+                .stream()
+                .map(EtfMapper::toResponse)
                 .toList();
+    }
+
+    @PostMapping
+    public ResponseEntity<EtfResponse> save(@RequestBody EtfRequest etfRequest){
+        var created = etfService.create(EtfMapper.toEntity(null, etfRequest));
+        var response = EtfMapper.toResponse(created);
+        return ResponseEntity
+                .created(URI.create("api/etfs/" + created.getId()))
+                .body(response);
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<EtfResponse> update(@PathVariable Long id, @RequestBody EtfRequest etfRequest){
+        return etfService.update(id,EtfMapper.toEntity(id, etfRequest))
+                .map(EtfMapper::toResponse)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
 
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<EtfResponse> delete(@PathVariable Long id){
+        if (etfService.delete(id)) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+
+    }
+
+
 }
