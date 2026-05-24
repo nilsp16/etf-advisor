@@ -7,9 +7,9 @@ import de.dhbwravensburg.etfadvisor.entity.Recommendation;
 
 import java.time.LocalDateTime;
 
-public final class RecommandationMapper {
+public final class RecommendationMapper {
 
-    private RecommandationMapper(){}
+    private RecommendationMapper(){}
 
     public static Recommendation toEntity( RecommendationRequest request, Etf etf){
         return new Recommendation(
