@@ -7,7 +7,9 @@ import de.dhbwravensburg.etfadvisor.entity.WatchlistEntry;
 
 import java.time.LocalDateTime;
 
-public class WatchlistEntryMapper {
+public final class WatchlistEntryMapper {
+
+    private WatchlistEntryMapper(){}
 
     public static WatchlistEntry toEntity(WatchlistEntryRequest request, Etf  etf) {
         return new WatchlistEntry(
