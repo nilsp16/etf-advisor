@@ -22,9 +22,6 @@ public class EtfService {
    public List<Etf> findByDividendPolicy(String dividendPolicy){
         return this.repository.findByDividendPolicyIgnoreCase(dividendPolicy);
    }
-   public List<Etf> findBySignal(String signal){
-        return this.repository.findBySignalIgnoreCase(signal);
-   }
 
    public Optional<Etf> findById(Long id){
             return this.repository.findById(id);
@@ -45,7 +42,6 @@ public class EtfService {
                     existing.setName(updated.getName());
                     existing.setCurrency(updated.getCurrency());
                     existing.setIsin(updated.getIsin());
-                    existing.setSignal(updated.getSignal());
                     existing.setCurrentPrice(updated.getCurrentPrice());
                     existing.setDividendPolicy(updated.getDividendPolicy());
                     existing.setHigh52Week(updated.getHigh52Week());

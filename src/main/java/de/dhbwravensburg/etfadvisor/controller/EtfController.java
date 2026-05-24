@@ -67,13 +67,6 @@ public class EtfController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("signal/{signal}")
-    public  List<EtfResponse> getBySignal(@PathVariable String signal){
-        return  this.etfService.findBySignal(signal)
-                .stream()
-                .map(EtfMapper::toResponse)
-                .toList();
-    }
 
     @PostMapping
     public ResponseEntity<EtfResponse> save(@RequestBody EtfRequest etfRequest){

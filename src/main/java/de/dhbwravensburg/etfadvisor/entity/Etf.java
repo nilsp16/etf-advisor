@@ -1,9 +1,6 @@
 package de.dhbwravensburg.etfadvisor.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,30 +30,44 @@ public class Etf {
     private double high52Week;
     private double marketCap;
     private String replicationMethod;
-    private String signal;
 
-    public static List<Etf> generateTestData(){
-        return List.of(
-                new Etf(1L, "Vanguard FTSE All-World", "IE00B3RBWM25",
-                        "VWRL", "USD", 0.22, 112.45,
-                        "Distributing", 89.10, 115.30, 18.5, "Physical","sell"),
 
-                new Etf(2L, "iShares Core MSCI World", "IE00B4L5Y983",
-                        "IWDA", "USD", 0.20, 98.76,
-                        "Accumulating", 78.40, 101.20, 62.3, "Physical","buy"),
 
-                new Etf(3L, "Xtrackers MSCI Emerging Markets", "IE00BTJRMP35",
-                        "XMME", "EUR", 0.18, 24.31,
-                        "Accumulating", 19.80, 26.10, 4.1, "Physical","hold"),
+    @OneToMany(mappedBy = "etf", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Recommendation> recommendations;
+    @OneToMany(mappedBy = "etf", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<WatchlistEntry> watchlistEntries;
 
-                new Etf(4L, "iShares S&P 500", "IE0031442068",
-                        "IUSA", "USD", 0.07, 45.67,
-                        "Accumulating", 36.20, 47.90, 89.7, "Physical","buy"),
-
-                new Etf(5L, "Amundi MSCI World", "LU1681043599",
-                        "CW8", "EUR", 0.12, 412.30,
-                        "Accumulating", 320.50, 425.80, 12.8, "Synthetic","sell")
-        );
+    public void addRecommendation(Recommendation recommendation){
+        this.recommendations.add(recommendation);
+        recommendation.setEtf(this);
+    }
+    public void removeRecommendation(Recommendation recommendation){
+        this.recommendations.remove(recommendation);
+        this.recommendations.remove(recommendation);
+    }
+    public void addWatchlistEntry(WatchlistEntry watchlistEntry){
+        this.watchlistEntries.add(watchlistEntry);
+        watchlistEntry.setEtf(this);
+    }
+    public void removeWatchlistEntry(WatchlistEntry watchlistEntry){
+        this.watchlistEntries.remove(watchlistEntry);
     }
 
+    //Constructor for testdata
+    public Etf(Long id, String name, String isin, String ticker, String currency, double ter, double currentPrice, String dividendPolicy, double low52Week, double high52Week, double marketCap, String replicationMethod) {
+        this.id = id;
+        this.name = name;
+        this.isin = isin;
+        this.ticker = ticker;
+        this.currency = currency;
+        this.ter = ter;
+        this.currentPrice = currentPrice;
+        this.dividendPolicy = dividendPolicy;
+        this.low52Week = low52Week;
+        this.high52Week = high52Week;
+        this.marketCap = marketCap;
+        this.replicationMethod = replicationMethod;
+
+    }
 }
