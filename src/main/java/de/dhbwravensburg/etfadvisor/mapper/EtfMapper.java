@@ -19,8 +19,7 @@ public class EtfMapper {
                 request.low52Week(),
                 request.high52Week(),
                 request.marketCap(),
-                request.replicationMethod(),
-                request.signal()
+                request.replicationMethod()
         );
     }
     public static EtfResponse toResponse(Etf etf){
@@ -37,8 +36,7 @@ public class EtfMapper {
         etf.getLow52Week(),
         etf.getHigh52Week(),
         etf.getMarketCap(),
-        etf.getReplicationMethod(),
-               etf.getSignal()
+        etf.getReplicationMethod()
         );
     }
 }

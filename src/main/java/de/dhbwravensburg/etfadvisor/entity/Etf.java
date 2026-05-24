@@ -30,7 +30,7 @@ public class Etf {
     private double high52Week;
     private double marketCap;
     private String replicationMethod;
-    private String signal;
+
 
 
     @OneToMany(mappedBy = "etf", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -55,7 +55,7 @@ public class Etf {
     }
 
     //Constructor for testdata
-    public Etf(Long id, String name, String isin, String ticker, String currency, double ter, double currentPrice, String dividendPolicy, double low52Week, double high52Week, double marketCap, String replicationMethod, String signal) {
+    public Etf(Long id, String name, String isin, String ticker, String currency, double ter, double currentPrice, String dividendPolicy, double low52Week, double high52Week, double marketCap, String replicationMethod) {
         this.id = id;
         this.name = name;
         this.isin = isin;
@@ -68,6 +68,6 @@ public class Etf {
         this.high52Week = high52Week;
         this.marketCap = marketCap;
         this.replicationMethod = replicationMethod;
-        this.signal = signal;
+
     }
 }

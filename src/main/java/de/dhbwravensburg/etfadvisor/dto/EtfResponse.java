@@ -12,7 +12,7 @@ public record EtfResponse(
          double low52Week,
          double high52Week,
          double marketCap,
-         String replicationMethod,
-         String signal
+         String replicationMethod
+
 ) {
 }
