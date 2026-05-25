@@ -1,7 +1,9 @@
 package de.dhbwravensburg.etfadvisor.service;
 
+import de.dhbwravensburg.etfadvisor.dto.WatchlistEntryRequest;
 import de.dhbwravensburg.etfadvisor.entity.Recommendation;
 import de.dhbwravensburg.etfadvisor.entity.WatchlistEntry;
+import de.dhbwravensburg.etfadvisor.mapper.WatchlistEntryMapper;
 import de.dhbwravensburg.etfadvisor.repository.EtfRepository;
 import de.dhbwravensburg.etfadvisor.repository.WatchlistEntryRepository;
 import org.springframework.stereotype.Service;
@@ -24,10 +26,10 @@ public class WatchlistEntryService {
 
     public List<WatchlistEntry> findByEtfId(Long etfId){return this.repository.findByEtfId(etfId);}
 
-    public Optional<WatchlistEntry> create(Long etfId, WatchlistEntry entry){
+    public Optional<WatchlistEntry> create(Long etfId, WatchlistEntryRequest entryRequest){
 
         return etfRepository.findById(etfId).map(etf -> {
-            entry.setEtf(etf);
+            WatchlistEntry entry = WatchlistEntryMapper.toEntity(entryRequest,etf);
             return repository.save(entry);
         });
 

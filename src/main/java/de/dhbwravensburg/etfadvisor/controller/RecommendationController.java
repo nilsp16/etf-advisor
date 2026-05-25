@@ -1,0 +1,45 @@
+package de.dhbwravensburg.etfadvisor.controller;
+
+import de.dhbwravensburg.etfadvisor.dto.RecommendationRequest;
+import de.dhbwravensburg.etfadvisor.dto.RecommendationResponse;
+import de.dhbwravensburg.etfadvisor.entity.Recommendation;
+import de.dhbwravensburg.etfadvisor.mapper.RecommendationMapper;
+import de.dhbwravensburg.etfadvisor.service.RecommendationService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
+import java.util.List;
+
+@RestController
+@RequestMapping("api/recommendations")
+public class RecommendationController {
+
+    private final RecommendationService recommendationService;
+
+    public RecommendationController(RecommendationService recommendationService){this.recommendationService=recommendationService;}
+
+    @GetMapping
+    public List<RecommendationResponse>getAll(){
+        return this.recommendationService.findAll().stream()
+                .map(RecommendationMapper::toResponse)
+                .toList();
+    }
+
+    @GetMapping("/etf/{etfId}")
+    public List<RecommendationResponse> getByEtfId(@PathVariable Long etfId){
+        return this.recommendationService.findByEtfId(etfId).stream()
+                .map(RecommendationMapper::toResponse)
+                .toList();
+    }
+
+    @PostMapping
+    public ResponseEntity<RecommendationResponse> save(@RequestBody RecommendationRequest recommendationRequest){
+        return recommendationService.create(recommendationRequest.etfId(),recommendationRequest)
+                .map(RecommendationMapper::toResponse)
+                .map(response->ResponseEntity
+                        .created(URI.create("/api/recommendations/generate/"+response.id()))
+                        .body(response))
+                .orElse(ResponseEntity.notFound().build());
+    }
+}
