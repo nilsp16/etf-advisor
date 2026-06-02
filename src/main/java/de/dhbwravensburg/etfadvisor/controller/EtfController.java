@@ -6,6 +6,8 @@ import de.dhbwravensburg.etfadvisor.dto.EtfResponse;
 import de.dhbwravensburg.etfadvisor.entity.Etf;
 import de.dhbwravensburg.etfadvisor.mapper.EtfMapper;
 import de.dhbwravensburg.etfadvisor.service.EtfService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,20 +34,13 @@ public class EtfController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EtfResponse> getById(@PathVariable long id){
-       return this.etfService.findById(id)
-               .map(EtfMapper :: toResponse )
-               .map(ResponseEntity :: ok)
-               .orElse(ResponseEntity.notFound().build());
+    public EtfResponse getById(@PathVariable long id){
+    return EtfMapper.toResponse(etfService.findById(id));
     }
 
     @GetMapping("/isin/{isin}")
-    public  ResponseEntity<EtfResponse> getByIsin(@PathVariable String isin){
-        return this.etfService.findByIsin(isin)
-                .map(EtfMapper::toResponse)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
+    public  EtfResponse getByIsin(@PathVariable String isin){
+        return EtfMapper.toResponse(etfService.findByIsin(isin));    }
 
 
 
@@ -60,16 +55,12 @@ public class EtfController {
 
 
     @GetMapping("/ticker/{ticker}")
-    public  ResponseEntity<EtfResponse> getByTicker(@PathVariable String ticker){
-        return this.etfService.findByTicker(ticker)
-                .map(entity ->EtfMapper.toResponse(entity))
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
+    public  EtfResponse getByTicker(@PathVariable String ticker){
+        return EtfMapper.toResponse(etfService.findByTicker(ticker));    }
 
 
     @PostMapping
-    public ResponseEntity<EtfResponse> save(@RequestBody EtfRequest etfRequest){
+    public ResponseEntity<EtfResponse> save(@Valid @RequestBody EtfRequest etfRequest){
         var created = etfService.create(EtfMapper.toEntity(null, etfRequest));
         var response = EtfMapper.toResponse(created);
         return ResponseEntity
@@ -77,20 +68,15 @@ public class EtfController {
                 .body(response);
     }
     @PutMapping("/{id}")
-    public ResponseEntity<EtfResponse> update(@PathVariable Long id, @RequestBody EtfRequest etfRequest){
-        return etfService.update(id,EtfMapper.toEntity(id, etfRequest))
-                .map(EtfMapper::toResponse)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public EtfResponse update(@PathVariable Long id,@Valid @RequestBody EtfRequest etfRequest){
+        var updated = etfService.update(id, EtfMapper.toEntity(id,etfRequest));
+        return EtfMapper.toResponse(updated);
 
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<EtfResponse> delete(@PathVariable Long id){
-        if (etfService.delete(id)) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
-
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        etfService.delete(id);
     }
 
 

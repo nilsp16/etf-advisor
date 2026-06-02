@@ -4,7 +4,9 @@ import de.dhbwravensburg.etfadvisor.dto.EtfRequest;
 import de.dhbwravensburg.etfadvisor.dto.EtfResponse;
 import de.dhbwravensburg.etfadvisor.entity.Etf;
 
-public class EtfMapper {
+public final class EtfMapper {
+
+    private EtfMapper(){}
 
     public static Etf toEntity(Long id, EtfRequest request){
         return new Etf(

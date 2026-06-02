@@ -26,7 +26,6 @@ public class WatchlistEntry {
     private Etf etf;
 
     private LocalDateTime addedAt;
-    private String name;
     private String userNote;
 
 
