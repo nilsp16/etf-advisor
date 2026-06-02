@@ -27,7 +27,9 @@ public class WatchlistEntryService {
     public List<WatchlistEntry> findByEtfId(Long etfId){return this.repository.findByEtfId(etfId);}
 
     public Optional<WatchlistEntry> create(Long etfId, WatchlistEntryRequest entryRequest){
-
+        if (repository.existsByEtfId(etfId)){
+            return Optional.empty();
+        }
         return etfRepository.findById(etfId).map(etf -> {
             WatchlistEntry entry = WatchlistEntryMapper.toEntity(entryRequest,etf);
             return repository.save(entry);
