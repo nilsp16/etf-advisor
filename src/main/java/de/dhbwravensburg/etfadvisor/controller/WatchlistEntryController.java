@@ -5,6 +5,7 @@ import de.dhbwravensburg.etfadvisor.dto.WatchlistEntryResponse;
 import de.dhbwravensburg.etfadvisor.mapper.WatchlistEntryMapper;
 import de.dhbwravensburg.etfadvisor.service.EtfService;
 import de.dhbwravensburg.etfadvisor.service.WatchlistEntryService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +28,7 @@ public class WatchlistEntryController {
     }
 
     @PostMapping
-    public ResponseEntity<WatchlistEntryResponse> save(@RequestBody WatchlistEntryRequest watchlistEntryRequest){
+    public ResponseEntity<WatchlistEntryResponse> save(@Valid @RequestBody WatchlistEntryRequest watchlistEntryRequest){
 
         return  watchlistEntryService.create(watchlistEntryRequest.etfId(), watchlistEntryRequest)
                 .map(WatchlistEntryMapper::toResponse)

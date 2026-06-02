@@ -5,6 +5,7 @@ import de.dhbwravensburg.etfadvisor.dto.RecommendationResponse;
 import de.dhbwravensburg.etfadvisor.entity.Recommendation;
 import de.dhbwravensburg.etfadvisor.mapper.RecommendationMapper;
 import de.dhbwravensburg.etfadvisor.service.RecommendationService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +35,7 @@ public class RecommendationController {
     }
 
     @PostMapping
-    public ResponseEntity<RecommendationResponse> save(@RequestBody RecommendationRequest recommendationRequest){
+    public ResponseEntity<RecommendationResponse> save(@Valid @RequestBody RecommendationRequest recommendationRequest){
         return recommendationService.create(recommendationRequest.etfId(),recommendationRequest)
                 .map(RecommendationMapper::toResponse)
                 .map(response->ResponseEntity

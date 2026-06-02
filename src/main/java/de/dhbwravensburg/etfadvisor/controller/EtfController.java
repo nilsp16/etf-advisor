@@ -6,6 +6,7 @@ import de.dhbwravensburg.etfadvisor.dto.EtfResponse;
 import de.dhbwravensburg.etfadvisor.entity.Etf;
 import de.dhbwravensburg.etfadvisor.mapper.EtfMapper;
 import de.dhbwravensburg.etfadvisor.service.EtfService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -69,7 +70,7 @@ public class EtfController {
 
 
     @PostMapping
-    public ResponseEntity<EtfResponse> save(@RequestBody EtfRequest etfRequest){
+    public ResponseEntity<EtfResponse> save(@Valid @RequestBody EtfRequest etfRequest){
         var created = etfService.create(EtfMapper.toEntity(null, etfRequest));
         var response = EtfMapper.toResponse(created);
         return ResponseEntity
@@ -77,7 +78,7 @@ public class EtfController {
                 .body(response);
     }
     @PutMapping("/{id}")
-    public ResponseEntity<EtfResponse> update(@PathVariable Long id, @RequestBody EtfRequest etfRequest){
+    public ResponseEntity<EtfResponse> update(@PathVariable Long id,@Valid @RequestBody EtfRequest etfRequest){
         return etfService.update(id,EtfMapper.toEntity(id, etfRequest))
                 .map(EtfMapper::toResponse)
                 .map(ResponseEntity::ok)
