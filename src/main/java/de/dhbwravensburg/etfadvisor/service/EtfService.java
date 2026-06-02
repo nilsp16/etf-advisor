@@ -1,6 +1,7 @@
 package de.dhbwravensburg.etfadvisor.service;
 
 import de.dhbwravensburg.etfadvisor.entity.Etf;
+import de.dhbwravensburg.etfadvisor.exceptions.EtfNotFoundException;
 import de.dhbwravensburg.etfadvisor.repository.EtfRepository;
 import org.springframework.stereotype.Service;
 
@@ -23,21 +24,21 @@ public class EtfService {
         return this.repository.findByDividendPolicyIgnoreCase(dividendPolicy);
    }
 
-   public Optional<Etf> findById(Long id){
-            return this.repository.findById(id);
+   public Etf findById(Long id){
+            return this.repository.findById(id).orElseThrow(() -> new EtfNotFoundException(id));
    }
-   public Optional<Etf> findByTicker(String ticker){
-            return this.repository.findByTickerIgnoreCase(ticker);
+   public Etf findByTicker(String ticker){
+            return this.repository.findByTickerIgnoreCase(ticker).orElseThrow(() -> new EtfNotFoundException(ticker));
    }
-   public Optional<Etf> findByIsin(String isin){
-            return this.repository.findByIsin(isin);
+   public Etf findByIsin(String isin){
+            return this.repository.findByIsin(isin).orElseThrow(() -> new EtfNotFoundException(isin));
    }
 
    public Etf create(Etf entity) {
         return this.repository.save(entity);
    }
 
-   public Optional<Etf> update(Long id, Etf updated){
+   public Etf update(Long id, Etf updated){
         return this.repository.findById(id).map(existing -> {
                     existing.setName(updated.getName());
                     existing.setCurrency(updated.getCurrency());
@@ -53,13 +54,14 @@ public class EtfService {
 
                     return repository.save(existing);
                 }
-                );
+                )
+                .orElseThrow(() -> new EtfNotFoundException(id));
 
    }
 
    public boolean delete(Long id){
         if(!repository.existsById(id)){
-            return false;
+            throw new EtfNotFoundException(id);
         }
         repository.deleteById(id);
         return true;

@@ -3,6 +3,9 @@ package de.dhbwravensburg.etfadvisor.service;
 import de.dhbwravensburg.etfadvisor.dto.WatchlistEntryRequest;
 import de.dhbwravensburg.etfadvisor.entity.Recommendation;
 import de.dhbwravensburg.etfadvisor.entity.WatchlistEntry;
+import de.dhbwravensburg.etfadvisor.exceptions.DuplicateWatchlistEntryException;
+import de.dhbwravensburg.etfadvisor.exceptions.EtfNotFoundException;
+import de.dhbwravensburg.etfadvisor.exceptions.WatchlistEntryNotFoundException;
 import de.dhbwravensburg.etfadvisor.mapper.WatchlistEntryMapper;
 import de.dhbwravensburg.etfadvisor.repository.EtfRepository;
 import de.dhbwravensburg.etfadvisor.repository.WatchlistEntryRepository;
@@ -26,23 +29,23 @@ public class WatchlistEntryService {
 
     public List<WatchlistEntry> findByEtfId(Long etfId){return this.repository.findByEtfId(etfId);}
 
-    public Optional<WatchlistEntry> create(Long etfId, WatchlistEntryRequest entryRequest){
+    public WatchlistEntry create(Long etfId, WatchlistEntryRequest entryRequest){
         if (repository.existsByEtfId(etfId)){
-            return Optional.empty();
+            throw  new DuplicateWatchlistEntryException();
         }
         return etfRepository.findById(etfId).map(etf -> {
             WatchlistEntry entry = WatchlistEntryMapper.toEntity(entryRequest,etf);
             return repository.save(entry);
-        });
+        })
+                .orElseThrow(()->new EtfNotFoundException(etfId));
 
     }
 
-    public boolean delete(Long id){
-        if(!repository.existsById(id)){
-            return false;
+    public void delete(Long id){
+        if ((!repository.existsByEtfId(id))){
+            throw new WatchlistEntryNotFoundException(id);
         }
         repository.deleteById(id);
-        return true;
     }
 
 

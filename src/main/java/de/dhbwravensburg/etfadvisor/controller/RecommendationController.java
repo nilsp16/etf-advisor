@@ -36,11 +36,9 @@ public class RecommendationController {
 
     @PostMapping
     public ResponseEntity<RecommendationResponse> save(@Valid @RequestBody RecommendationRequest recommendationRequest){
-        return recommendationService.create(recommendationRequest.etfId(),recommendationRequest)
-                .map(RecommendationMapper::toResponse)
-                .map(response->ResponseEntity
-                        .created(URI.create("/api/recommendations/generate/"+response.id()))
-                        .body(response))
-                .orElse(ResponseEntity.notFound().build());
+        var recommendation = recommendationService.create(recommendationRequest.etfId(),recommendationRequest);
+        var response = RecommendationMapper.toResponse(recommendation);
+        return ResponseEntity.created(URI.create("/api/recommendations/"+response.id())).body(response);
+
     }
 }

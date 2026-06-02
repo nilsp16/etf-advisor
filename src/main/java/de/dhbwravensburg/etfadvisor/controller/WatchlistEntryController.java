@@ -6,6 +6,7 @@ import de.dhbwravensburg.etfadvisor.mapper.WatchlistEntryMapper;
 import de.dhbwravensburg.etfadvisor.service.EtfService;
 import de.dhbwravensburg.etfadvisor.service.WatchlistEntryService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,23 +29,17 @@ public class WatchlistEntryController {
     }
 
     @PostMapping
-    public ResponseEntity<WatchlistEntryResponse> save(@Valid @RequestBody WatchlistEntryRequest watchlistEntryRequest){
+    public ResponseEntity<WatchlistEntryResponse> save( @Valid @RequestBody WatchlistEntryRequest watchlistEntryRequest){
 
-        return  watchlistEntryService.create(watchlistEntryRequest.etfId(), watchlistEntryRequest)
-                .map(WatchlistEntryMapper::toResponse)
-                .map(response ->ResponseEntity
-                        .created(URI.create("/api/watchlist/"+response.id()))
-                        .body(response))
-                .orElse(ResponseEntity.notFound().build());
+        var entry = watchlistEntryService.create(watchlistEntryRequest.etfId(),watchlistEntryRequest);
+        var response= WatchlistEntryMapper.toResponse(entry);
+        return ResponseEntity.created(URI.create("/api/watchlist/"+response.id())).body(response);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<WatchlistEntryResponse> delete(@PathVariable Long id){
-        if (watchlistEntryService.delete(id)){
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        watchlistEntryService.delete(id);
     }
-
 }
 
