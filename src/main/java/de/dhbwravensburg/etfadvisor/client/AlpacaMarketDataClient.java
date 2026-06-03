@@ -1,6 +1,7 @@
 package de.dhbwravensburg.etfadvisor.client;
 
 import de.dhbwravensburg.etfadvisor.dto.alpaca.AlpacaSnapshotResponse;
+import de.dhbwravensburg.etfadvisor.exceptions.ExternalApiException;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -35,11 +36,12 @@ public class AlpacaMarketDataClient {
                     })
                     .body(AlpacaSnapshotResponse.class);
 
-            if(response == null || response.dailyBar()== null){
-                return Collections.emptyList();
+            if (response == null) {
+                throw new ExternalApiException("No data from Alpaca for symbol: " + symbol);
             }
 
-            return response.
+
+            return response;
         }catch (RestClientException ex){
             throw  new ExternalApiException("Failed to call Alpaca:" + ex.getMessage(), ex);
         }
