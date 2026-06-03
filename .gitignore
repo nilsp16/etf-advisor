@@ -36,6 +36,9 @@ build/
 .env
 application-local.properties
 
+# API Keys
+MyKeys.env
+
 # OS
 .DS_Store
 Thumbs.db
@@ -43,3 +46,4 @@ Thumbs.db
 # Node (kommt später für Frontend)
 node_modules/
 dist/
+
