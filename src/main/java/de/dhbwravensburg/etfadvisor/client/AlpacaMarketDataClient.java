@@ -23,7 +23,7 @@ public class AlpacaMarketDataClient {
         try{
             AlpacaSnapshotResponse response = alpacaRestClient.get()
                     .uri(uriBuilder -> uriBuilder
-                            .path("/v2/stocks/" + symbol + "/snapshot")
+                            .path("/stocks/" + symbol + "/snapshot")
                             .build()
                     )
                     .retrieve()
