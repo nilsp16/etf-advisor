@@ -31,4 +31,6 @@ public class Recommendation {
 
     private LocalDateTime generatedAt;
     private double priceAtGeneration;
+
+    private int Score;
 }
