@@ -9,6 +9,7 @@ public record RecommendationResponse (
         Signal signal,
         String reasoning,
         LocalDateTime generatedAt,
-        double priceAtGeneration
+        double priceAtGeneration,
+        int score
 ){
 }

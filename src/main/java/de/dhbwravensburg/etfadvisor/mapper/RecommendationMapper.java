@@ -18,7 +18,10 @@ public final class RecommendationMapper {
                 request.signal(),
                 request.reasoning(),
                 LocalDateTime.now(),
-                request.priceAtGeneration()
+                request.priceAtGeneration(),
+                0
+
+
         );
     }
 
@@ -30,7 +33,8 @@ public final class RecommendationMapper {
                 recommendation.getSignal(),
                 recommendation.getReasoning(),
                 recommendation.getGeneratedAt(),
-                recommendation.getPriceAtGeneration()
+                recommendation.getPriceAtGeneration(),
+                recommendation.getScore()
         );
     }
 }

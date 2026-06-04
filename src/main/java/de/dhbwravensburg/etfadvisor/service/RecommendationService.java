@@ -9,6 +9,7 @@ import de.dhbwravensburg.etfadvisor.mapper.RecommendationMapper;
 import de.dhbwravensburg.etfadvisor.repository.EtfRepository;
 import de.dhbwravensburg.etfadvisor.repository.RecommendationRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,7 +38,7 @@ public class RecommendationService {
         })
                 .orElseThrow(()-> new EtfNotFoundException(etfId));
     }
-
+    @Transactional
     public Recommendation generate(Long etfId){
 
         String reasoning;
@@ -70,15 +71,20 @@ public class RecommendationService {
         int diff = buyScore - sellScore;
         if(diff > 0){
             reasoning = "Buy signal based on scoring: price near 52-week low and/or below daily open. Score:  "+diff;
-            return create(etfId,new RecommendationRequest(etfId,Signal.BUY,reasoning,marketdata.dailyBar().c()));
+            var recommendation = create(etfId, new RecommendationRequest(etfId, Signal.BUY, reasoning, currentPrice));
+            recommendation.setScore(diff);
+            return repository.save(recommendation);
         } else if (diff < 0) {
             reasoning = "Sell signal based on scoring: price near 52-week high and/or above daily open. Score:  "+ diff;
-            return create(etfId,new RecommendationRequest(etfId,Signal.SELL,reasoning,marketdata.dailyBar().c()));
+            var recommendation = create(etfId, new RecommendationRequest(etfId, Signal.SELL, reasoning, currentPrice));
+            recommendation.setScore(diff);
+            return repository.save(recommendation);
         }
         else  {
             reasoning = "Hold signal: no clear direction from scoring indicators" ;
-            return create(etfId,new RecommendationRequest(etfId,Signal.HOLD,reasoning,marketdata.dailyBar().c()));
-
+            var recommendation = create(etfId, new RecommendationRequest(etfId, Signal.HOLD, reasoning, currentPrice));
+            recommendation.setScore(diff);
+            return repository.save(recommendation);
         }
 
 
