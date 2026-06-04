@@ -7,6 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,6 +35,14 @@ public class GlobalExceptionHandler {
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(
                 HttpStatus.CONFLICT, ex.getMessage());
         problem.setTitle("Duplicate watchlist entry ");
+        return problem;
+    }
+
+    @ExceptionHandler(ExternalApiException.class)
+    public ProblemDetail handleExternalApi(ExternalApiException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+                HttpStatus.BAD_GATEWAY, ex.getMessage());
+        problem.setTitle("Upstream service unavailable");
         return problem;
     }
 
