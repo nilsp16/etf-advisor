@@ -41,4 +41,10 @@ public class RecommendationController {
         return ResponseEntity.created(URI.create("/api/recommendations/"+response.id())).body(response);
 
     }
+    @PostMapping("/generate/{etfId}")
+    public  ResponseEntity<RecommendationResponse>generate(@PathVariable Long etfId){
+        var recommendation = recommendationService.generate(etfId);
+        var response = RecommendationMapper.toResponse(recommendation);
+        return ResponseEntity.created(URI.create("/api/recommendations/"+response.id())).body(response);
+    }
 }
