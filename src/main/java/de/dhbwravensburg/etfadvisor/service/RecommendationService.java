@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional(readOnly = true)
 public class RecommendationService {
 
     private final RecommendationRepository repository;
@@ -27,10 +28,12 @@ public class RecommendationService {
         this.client= client;
     }
 
+
     public List<Recommendation> findAll(){return this.repository.findAll();}
 
     public List<Recommendation> findByEtfId(Long etfId){return this.repository.findByEtfId(etfId);}
 
+    @Transactional
     public Recommendation create(Long etfId, RecommendationRequest recommendationRequest){
         return this.etfRepository.findById(etfId).map(etf -> {
             Recommendation recommendation = RecommendationMapper.toEntity(recommendationRequest,etf);

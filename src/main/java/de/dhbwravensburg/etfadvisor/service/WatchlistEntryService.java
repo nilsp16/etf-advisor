@@ -10,11 +10,13 @@ import de.dhbwravensburg.etfadvisor.mapper.WatchlistEntryMapper;
 import de.dhbwravensburg.etfadvisor.repository.EtfRepository;
 import de.dhbwravensburg.etfadvisor.repository.WatchlistEntryRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional(readOnly = true)
 public class WatchlistEntryService {
 
     private final WatchlistEntryRepository repository;
@@ -25,10 +27,11 @@ public class WatchlistEntryService {
         this.etfRepository=etfRepository;
     }
 
-    public List<WatchlistEntry> findAll(){return this.repository.findAll(); }
+    public List<WatchlistEntry> findAll(){return this.repository.findAllWithEtf(); }
 
     public List<WatchlistEntry> findByEtfId(Long etfId){return this.repository.findByEtfId(etfId);}
 
+    @Transactional
     public WatchlistEntry create(Long etfId, WatchlistEntryRequest entryRequest){
         if (repository.existsByEtfId(etfId)){
             throw  new DuplicateWatchlistEntryException();
@@ -41,6 +44,7 @@ public class WatchlistEntryService {
 
     }
 
+    @Transactional
     public void delete(Long id){
         if ((!repository.existsByEtfId(id))){
             throw new WatchlistEntryNotFoundException(id);

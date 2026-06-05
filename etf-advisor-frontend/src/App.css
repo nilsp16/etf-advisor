@@ -1,0 +1,369 @@
+/* Layout and component styling for the ETF Advisor dashboard. */
+
+.app {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.brand__mark {
+  font-size: 1.4rem;
+  color: var(--accent);
+}
+
+.header__actions {
+  display: flex;
+  gap: 0.6rem;
+}
+
+/* Navigation */
+.nav {
+  display: flex;
+  gap: 0.3rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.25rem;
+}
+
+.nav__item {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  padding: 0.45rem 1rem;
+  border-radius: 7px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.nav__item:hover {
+  opacity: 1;
+  color: var(--text);
+}
+
+.nav__item--active {
+  background: var(--accent);
+  color: var(--row-selected-text);
+}
+
+.nav__count {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  background: var(--row-selected-text);
+  color: var(--accent);
+  border-radius: 999px;
+  padding: 0.05rem 0.4rem;
+}
+
+/* Layout */
+.layout-single {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+@media (max-width: 700px) {
+  .header { flex-wrap: wrap; gap: 1rem; }
+}
+
+.placeholder {
+  text-align: center;
+  padding: 3rem 1.5rem;
+}
+
+/* Cards */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.4rem 1.5rem;
+  box-shadow: var(--shadow);
+}
+
+/* Tables */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.table th {
+  text-align: left;
+  font-weight: 500;
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  padding: 0 0.7rem 0.7rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.table th.num { text-align: right; }
+
+.table td {
+  padding: 0.75rem 0.7rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.table tbody tr {
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.table tbody tr:hover {
+  background: var(--row-hover);
+}
+
+.row--selected,
+.row--selected:hover {
+  background: var(--row-selected);
+  color: var(--row-selected-text);
+}
+
+/* Detail */
+.detail__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.detail__ticker {
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+
+/* Verdict box — prominent latest signal + score */
+.verdict {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 0.9rem 1.2rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.verdict--buy { background: var(--buy-bg); border-color: var(--buy); }
+.verdict--sell { background: var(--sell-bg); border-color: var(--sell); }
+.verdict--hold { background: var(--hold-bg); border-color: var(--hold); }
+
+.verdict__score {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.verdict__score-value {
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+
+/* Watchlist page */
+.watchlist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.watchlist-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.watchlist-card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.watchlist-card__note {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.small-btn {
+  padding: 0.3rem 0.7rem;
+  font-size: 0.78rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem 1.5rem;
+  margin: 1rem 0;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.field__label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.field__value {
+  font-size: 1.05rem;
+}
+
+.field__value--accent {
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  align-items: center;
+  margin-top: 1.4rem;
+}
+
+.watchlist-add {
+  display: flex;
+  gap: 0.5rem;
+  flex: 1;
+  min-width: 240px;
+}
+
+/* Signals — filled color highlight */
+.signal {
+  display: inline-block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 0.22rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+}
+
+.signal--buy { color: var(--buy); background: var(--buy-bg); border-color: var(--buy); }
+.signal--sell { color: var(--sell); background: var(--sell-bg); border-color: var(--sell); }
+.signal--hold { color: var(--hold); background: var(--hold-bg); border-color: var(--hold); }
+
+.signal--lg {
+  font-size: 0.95rem;
+  padding: 0.4rem 1rem;
+}
+
+/* Watchlist */
+.watchlist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.watchlist li {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.watchlist li:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+/* Forms */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.9rem;
+  margin-bottom: 1.2rem;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+input, select {
+  font-family: inherit;
+  font-size: 0.92rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text);
+  transition: border-color 0.15s ease;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* Buttons */
+button {
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 500;
+  padding: 0.6rem 1.1rem;
+  border-radius: 8px;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--row-selected-text);
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.05s ease;
+}
+
+button:hover { opacity: 0.85; }
+button:active { transform: translateY(1px); }
+button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+button.ghost {
+  background: transparent;
+  color: var(--text);
+  border-color: var(--border);
+}
+
+button.ghost:hover {
+  border-color: var(--accent);
+  opacity: 1;
+}
+
+button.icon {
+  padding: 0.6rem 0.8rem;
+  font-size: 1rem;
+}
