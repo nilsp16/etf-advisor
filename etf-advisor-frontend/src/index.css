@@ -1,0 +1,72 @@
+/* Theme tokens. The data-theme attribute on <html> switches the palette.
+   Monochrome: near-black and near-white, one sharp accent. */
+
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+
+:root[data-theme='light'] {
+  --bg: #f7f7f5;
+  --surface: #ffffff;
+  --text: #111111;
+  --muted: #6b6b6b;
+  --border: #e3e3df;
+  --row-hover: #f0f0ed;
+  --row-selected: #111111;
+  --row-selected-text: #ffffff;
+  --accent: #111111;
+  --buy: #0a7d3c;
+  --buy-bg: #e3f4e9;
+  --sell: #b3261e;
+  --sell-bg: #fce4e2;
+  --hold: #8a6d00;
+  --hold-bg: #fbf2cf;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.05);
+}
+
+:root[data-theme='dark'] {
+  --bg: #0c0c0d;
+  --surface: #161618;
+  --text: #f2f2f0;
+  --muted: #9a9a98;
+  --border: #2a2a2d;
+  --row-hover: #1f1f22;
+  --row-selected: #f2f2f0;
+  --row-selected-text: #0c0c0d;
+  --accent: #f2f2f0;
+  --buy: #3fcf6e;
+  --buy-bg: #14331f;
+  --sell: #ff5c52;
+  --sell-bg: #3a1715;
+  --hold: #e8c84d;
+  --hold-bg: #332d10;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'IBM Plex Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+h1, h2, h3 {
+  font-family: 'Newsreader', serif;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.5rem;
+}
+
+h1 { font-size: 1.5rem; }
+h2 { font-size: 1.6rem; margin-top: 0.2rem; }
+h3 { font-size: 1.1rem; margin-top: 1.6rem; }
+
+.mono { font-family: 'IBM Plex Mono', monospace; }
+.muted { color: var(--muted); }
+.small { font-size: 0.78rem; }
+.num { text-align: right; }
+.error { color: var(--sell); font-size: 0.9rem; }
