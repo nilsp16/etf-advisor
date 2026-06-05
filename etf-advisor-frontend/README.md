@@ -1,73 +1,60 @@
-# React + TypeScript + Vite
+# ETF Advisor — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React + TypeScript frontend for the ETF Advisor backend. Monochrome design with
+dark/light mode, built following the lecture pattern (Vite, typed API layer,
+component tree, controlled forms).
 
-Currently, two official plugins are available:
+## Setup
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+1. Create the Vite project next to your backend folder:
 
-## React Compiler
+   ```bash
+   npm create vite@latest etf-advisor-frontend -- --template react-ts
+   cd etf-advisor-frontend
+   npm install
+   ```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+2. Copy the contents of this `frontend/` folder into the project, replacing the
+   generated `src/`, `vite.config.ts`, etc. The structure is:
 
-## Expanding the ESLint configuration
+   ```
+   src/
+   ├── main.tsx
+   ├── App.tsx
+   ├── App.css
+   ├── index.css
+   ├── types.ts
+   ├── api/etfAdvisorApi.ts
+   ├── theme/ThemeContext.tsx
+   └── components/
+       ├── EtfTable.tsx
+       ├── EtfDetail.tsx
+       ├── EtfForm.tsx
+       ├── WatchlistPanel.tsx
+       └── SignalBadge.tsx
+   vite.config.ts
+   ```
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+3. Start the backend (`./mvnw spring-boot:run`) and the PostgreSQL container,
+   then start the frontend:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+   ```bash
+   npm run dev
+   ```
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+4. Open http://localhost:5173
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## How it talks to the backend
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+The frontend never hardcodes `localhost:8080`. It uses relative `/api` URLs.
+The Vite dev proxy (in `vite.config.ts`) forwards those to the Spring Boot
+backend, so the browser stays on one origin and there is no CORS error.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Features
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- **List view** — all ETFs in a table (click a row to select)
+- **Detail view** — selected ETF with live Alpaca market data
+- **Form** — create a new ETF (POST /api/etfs)
+- **Recommendation generation** — calls POST /api/recommendations/generate/{id}
+- **Watchlist** — add and remove entries
+- **Dark/Light mode** — toggle in the header, follows OS preference on first load
