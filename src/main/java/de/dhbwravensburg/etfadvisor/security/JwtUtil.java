@@ -1,4 +1,4 @@
-package de.dhbwravensburg.etfadvisor.securtity;
+package de.dhbwravensburg.etfadvisor.security;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
