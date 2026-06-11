@@ -12,9 +12,13 @@ public interface WatchlistEntryRepository extends JpaRepository<WatchlistEntry,L
     @Query("SELECT w FROM WatchlistEntry w JOIN FETCH w.etf WHERE w.etf.id = :etfId")
     List<WatchlistEntry> findByEtfId(@Param("etfId") Long etfId);
 
-    @Query("SELECT w FROM WatchlistEntry w JOIN FETCH w.etf")
+    @Query("SELECT w FROM WatchlistEntry w JOIN FETCH w.etf JOIN FETCH w.user")
     List<WatchlistEntry> findAllWithEtf();
 
     Boolean existsByEtfId(Long etfId);
 
+    Boolean existsByEtfIdAndUserId(Long etfId,Long userId);
+
+    @Query("SELECT w FROM WatchlistEntry w JOIN FETCH w.etf JOIN FETCH w.user WHERE w.user.id = :userId")
+    List<WatchlistEntry> findByUserId(@Param("userId") Long userId);
 }

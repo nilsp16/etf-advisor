@@ -28,6 +28,9 @@ public class WatchlistEntry {
     private LocalDateTime addedAt;
     private String userNote;
 
+    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+    private User user;
+
 
 
 }
