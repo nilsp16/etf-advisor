@@ -1,6 +1,9 @@
 package de.dhbwravensburg.etfadvisor.service;
 
+import de.dhbwravensburg.etfadvisor.client.AlpacaMarketDataClient;
+import de.dhbwravensburg.etfadvisor.client.NinjasEtfClient;
 import de.dhbwravensburg.etfadvisor.dto.WatchlistEntryRequest;
+import de.dhbwravensburg.etfadvisor.entity.Etf;
 import de.dhbwravensburg.etfadvisor.entity.Recommendation;
 import de.dhbwravensburg.etfadvisor.entity.User;
 import de.dhbwravensburg.etfadvisor.entity.WatchlistEntry;
@@ -28,11 +31,15 @@ public class WatchlistEntryService {
     private final WatchlistEntryRepository repository;
     private final EtfRepository etfRepository;
     private final UserRepository userRepository;
+    private final AlpacaMarketDataClient client;
+    private final NinjasEtfClient ninjasEtfClient;
 
-    public WatchlistEntryService (WatchlistEntryRepository repository, EtfRepository etfRepository, UserRepository userRepository){
+    public WatchlistEntryService (WatchlistEntryRepository repository, EtfRepository etfRepository, UserRepository userRepository, AlpacaMarketDataClient client, NinjasEtfClient ninjasEtfClient){
         this.repository = repository;
         this.etfRepository=etfRepository;
         this.userRepository=userRepository;
+        this.client = client;
+        this.ninjasEtfClient = ninjasEtfClient;
     }
 
     public List<WatchlistEntry> findAll(){
@@ -69,6 +76,34 @@ public class WatchlistEntryService {
     private User getCurrentUser(){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByUsername(username).orElseThrow(()->new UsernameNotFoundException("User not found"));
+    }
+
+    @Transactional
+    public WatchlistEntry addByTicker( String ticker, String userNote){
+       var user = getCurrentUser();
+
+       var etf = etfRepository.findByTickerIgnoreCase(ticker).orElseGet(()->{
+           var snapshot = client.fetchSnapshot(ticker);
+           var metaData = ninjasEtfClient.getMeta(ticker);
+           Etf newEtf = new Etf();
+           newEtf.setTicker(ticker);
+           newEtf.setCurrentPrice(snapshot.latestTrade().p());
+           newEtf.setName(metaData.etfName());
+           newEtf.setIsin(metaData.isin());
+           newEtf.setCurrency("USD");
+
+           return etfRepository.save(newEtf);
+       });
+
+       if(repository.existsByEtfIdAndUserId(etf.getId(), user.getId())){
+           throw  new DuplicateWatchlistEntryException();
+       }
+
+       WatchlistEntry entry = WatchlistEntryMapper.toEntity(
+               new WatchlistEntryRequest(etf.getId(), userNote),etf);
+       entry.setUser(user);
+       return repository.save(entry);
+
     }
 
 

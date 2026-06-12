@@ -2,6 +2,7 @@ package de.dhbwravensburg.etfadvisor.client;
 
 import de.dhbwravensburg.etfadvisor.dto.alpaca.AlpacaSnapshotResponse;
 import de.dhbwravensburg.etfadvisor.exceptions.ExternalApiException;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -14,7 +15,7 @@ import java.util.List;
 public class AlpacaMarketDataClient {
     private final RestClient alpacaRestClient;
 
-    public AlpacaMarketDataClient(RestClient alpacaRestClient){
+    public AlpacaMarketDataClient(@Qualifier("alpacaRestClient") RestClient alpacaRestClient){
         this.alpacaRestClient = alpacaRestClient;
 
     }
