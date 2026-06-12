@@ -15,7 +15,6 @@ export interface Etf {
   replicationMethod: string
 }
 
-// What the POST/PUT form sends (no id)
 export interface EtfInput {
   name: string
   isin: string
@@ -65,4 +64,14 @@ export interface MarketData {
   low: number
   close: number
   volume: number
+}
+
+// Auth
+export interface AuthResponse {
+  token: string
+}
+
+export interface UserInfo {
+  username: string
+  role: string
 }
