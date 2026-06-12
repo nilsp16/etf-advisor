@@ -16,7 +16,7 @@ public final class WatchlistEntryMapper {
                 null,
                 etf,
                 LocalDateTime.now(),
-                request.userNote()
+                request.userNote(),null
         );
     }
 
