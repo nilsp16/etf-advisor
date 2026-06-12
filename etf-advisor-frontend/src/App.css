@@ -152,7 +152,7 @@
   color: var(--muted);
 }
 
-/* Verdict box — prominent latest signal + score */
+/* Verdict box */
 .verdict {
   display: flex;
   align-items: center;
@@ -175,41 +175,6 @@
 .verdict__score-value {
   font-size: 1.6rem;
   font-weight: 600;
-}
-
-/* Watchlist page */
-.watchlist-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.watchlist-card {
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1rem 1.1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.watchlist-card__head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.watchlist-card__note {
-  margin: 0;
-  font-size: 0.9rem;
-  color: var(--text);
-}
-
-.small-btn {
-  padding: 0.3rem 0.7rem;
-  font-size: 0.78rem;
 }
 
 .grid {
@@ -278,28 +243,179 @@
   padding: 0.4rem 1rem;
 }
 
-/* Watchlist */
-.watchlist {
-  list-style: none;
+/* Watchlist page */
+.watchlist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.watchlist-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.watchlist-card--buy { border-left: 4px solid var(--buy); }
+.watchlist-card--sell { border-left: 4px solid var(--sell); }
+.watchlist-card--hold { border-left: 4px solid var(--hold); }
+
+.watchlist-card__banner {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0.2rem;
+}
+
+.watchlist-card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.watchlist-card__note {
   margin: 0;
-  padding: 0;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.watchlist-card__reasoning {
+  margin: 0;
+  line-height: 1.4;
+}
+
+.small-btn {
+  padding: 0.3rem 0.7rem;
+  font-size: 0.78rem;
+}
+
+/* Add by ticker form */
+.add-ticker-form {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.ticker-input {
+  width: 120px;
+  text-transform: uppercase;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+/* Login page */
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 380px;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.login-header .brand__mark {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.login-form {
   display: flex;
   flex-direction: column;
   gap: 0.9rem;
 }
 
-.watchlist li {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 0.5rem;
-  padding-bottom: 0.9rem;
-  border-bottom: 1px solid var(--border);
+.login-switch {
+  text-align: center;
+  margin-top: 1.2rem;
 }
 
-.watchlist li:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
+.link-btn {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  font-size: inherit;
+  text-decoration: underline;
+}
+
+.link-btn:hover {
+  opacity: 0.7;
+}
+
+.theme-toggle-corner {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+}
+
+/* Profile */
+.profile {
+  max-width: 400px;
+}
+
+.role-admin {
+  color: var(--sell);
+  font-weight: 600;
+}
+
+.role-user {
+  color: var(--buy);
+}
+
+/* Admin */
+.inline-input {
+  font-family: inherit;
+  font-size: 0.85rem;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text);
+  width: 100%;
+}
+
+.inline-input.num {
+  width: 70px;
+  text-align: right;
+}
+
+.action-cell {
+  display: flex;
+  gap: 0.4rem;
+  white-space: nowrap;
+}
+
+.row--editing {
+  background: var(--row-hover);
+}
+
+.danger-btn {
+  color: var(--sell);
+  border-color: var(--sell);
+}
+
+.danger-btn:hover {
+  background: var(--sell-bg);
 }
 
 /* Forms */
