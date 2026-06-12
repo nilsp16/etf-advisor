@@ -1,5 +1,6 @@
 package de.dhbwravensburg.etfadvisor.controller;
 
+import de.dhbwravensburg.etfadvisor.dto.WatchlistAddByTickerRequest;
 import de.dhbwravensburg.etfadvisor.dto.WatchlistEntryRequest;
 import de.dhbwravensburg.etfadvisor.dto.WatchlistEntryResponse;
 import de.dhbwravensburg.etfadvisor.mapper.WatchlistEntryMapper;
@@ -35,6 +36,13 @@ public class WatchlistEntryController {
         var response= WatchlistEntryMapper.toResponse(entry);
         return ResponseEntity.created(URI.create("/api/watchlist/"+response.id())).body(response);
     }
+
+   @PostMapping("/add-by-ticker")
+   public ResponseEntity<WatchlistEntryResponse> addByTicker(@RequestBody WatchlistAddByTickerRequest request){
+        var entry = watchlistEntryService.addByTicker(request.ticker(),request.userNote());
+        var response = WatchlistEntryMapper.toResponse(entry);
+        return ResponseEntity.created(URI.create("/api/watchlist/"+response.id())).body(response);
+   }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
