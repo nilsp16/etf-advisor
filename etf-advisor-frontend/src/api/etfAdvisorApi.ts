@@ -1,5 +1,6 @@
-// Central API layer — all backend calls live here so components stay clean.
-// Uses relative /api URLs; the Vite dev proxy forwards them to Spring Boot.
+// Central API layer with JWT auth support.
+// Public endpoints (GET etfs, market-data) work without token.
+// Protected endpoints send the Authorization: Bearer header.
 
 import type {
   Etf,
@@ -8,26 +9,51 @@ import type {
   WatchlistEntry,
   WatchlistInput,
   MarketData,
+  AuthResponse,
 } from '../types'
 
 const BASE = '/api'
 
+let _token: string | null = null
+export function setApiToken(token: string | null) {
+  _token = token
+}
+
+function authHeaders(): Record<string, string> {
+  const h: Record<string, string> = { 'Content-Type': 'application/json' }
+  if (_token) h['Authorization'] = `Bearer ${_token}`
+  return h
+}
+
 async function handle<T>(response: Response): Promise<T> {
   if (!response.ok) {
-    // Backend sends RFC-7807 ProblemDetail; try to surface its message.
     let message = `HTTP ${response.status}`
     try {
       const problem = await response.json()
       if (problem?.detail) message = problem.detail
-    } catch {
-      // no JSON body, keep default message
-    }
+    } catch { /* no JSON body */ }
     throw new Error(message)
   }
-  if (response.status === 204) {
-    return undefined as T
-  }
+  if (response.status === 204) return undefined as T
   return (await response.json()) as T
+}
+
+// --- Auth (public) ---
+
+export function register(username: string, password: string, role: string): Promise<AuthResponse> {
+  return fetch(`${BASE}/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password, role }),
+  }).then((r) => handle<AuthResponse>(r))
+}
+
+export function login(username: string, password: string): Promise<AuthResponse> {
+  return fetch(`${BASE}/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password }),
+  }).then((r) => handle<AuthResponse>(r))
 }
 
 // --- ETFs ---
@@ -43,7 +69,7 @@ export function getEtf(id: number): Promise<Etf> {
 export function createEtf(input: EtfInput): Promise<Etf> {
   return fetch(`${BASE}/etfs`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: authHeaders(),
     body: JSON.stringify(input),
   }).then((r) => handle<Etf>(r))
 }
@@ -51,18 +77,19 @@ export function createEtf(input: EtfInput): Promise<Etf> {
 export function updateEtf(id: number, input: EtfInput): Promise<Etf> {
   return fetch(`${BASE}/etfs/${id}`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
+    headers: authHeaders(),
     body: JSON.stringify(input),
   }).then((r) => handle<Etf>(r))
 }
 
 export function deleteEtf(id: number): Promise<void> {
-  return fetch(`${BASE}/etfs/${id}`, { method: 'DELETE' }).then((r) =>
-    handle<void>(r),
-  )
+  return fetch(`${BASE}/etfs/${id}`, {
+    method: 'DELETE',
+    headers: authHeaders(),
+  }).then((r) => handle<void>(r))
 }
 
-// --- Market data (Alpaca via backend) ---
+// --- Market data ---
 
 export function getMarketData(etfId: number): Promise<MarketData> {
   return fetch(`${BASE}/market-data/${etfId}`).then((r) => handle<MarketData>(r))
@@ -71,41 +98,51 @@ export function getMarketData(etfId: number): Promise<MarketData> {
 // --- Recommendations ---
 
 export function getRecommendations(): Promise<Recommendation[]> {
-  return fetch(`${BASE}/recommendations`).then((r) =>
-    handle<Recommendation[]>(r),
+  return fetch(`${BASE}/recommendations`, { headers: authHeaders() }).then((r) =>
+      handle<Recommendation[]>(r),
   )
 }
 
-export function getRecommendationsForEtf(
-  etfId: number,
-): Promise<Recommendation[]> {
-  return fetch(`${BASE}/recommendations/etf/${etfId}`).then((r) =>
-    handle<Recommendation[]>(r),
+export function getRecommendationsForEtf(etfId: number): Promise<Recommendation[]> {
+  return fetch(`${BASE}/recommendations/etf/${etfId}`, { headers: authHeaders() }).then((r) =>
+      handle<Recommendation[]>(r),
   )
 }
 
 export function generateRecommendation(etfId: number): Promise<Recommendation> {
   return fetch(`${BASE}/recommendations/generate/${etfId}`, {
     method: 'POST',
+    headers: authHeaders(),
   }).then((r) => handle<Recommendation>(r))
 }
 
 // --- Watchlist ---
 
 export function getWatchlist(): Promise<WatchlistEntry[]> {
-  return fetch(`${BASE}/watchlist`).then((r) => handle<WatchlistEntry[]>(r))
+  return fetch(`${BASE}/watchlist`, { headers: authHeaders() }).then((r) =>
+      handle<WatchlistEntry[]>(r),
+  )
 }
 
 export function addToWatchlist(input: WatchlistInput): Promise<WatchlistEntry> {
   return fetch(`${BASE}/watchlist`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: authHeaders(),
     body: JSON.stringify(input),
   }).then((r) => handle<WatchlistEntry>(r))
 }
 
+export function addToWatchlistByTicker(ticker: string, userNote: string): Promise<WatchlistEntry> {
+  return fetch(`${BASE}/watchlist/add-by-ticker`, {
+    method: 'POST',
+    headers: authHeaders(),
+    body: JSON.stringify({ ticker, userNote }),
+  }).then((r) => handle<WatchlistEntry>(r))
+}
+
 export function removeFromWatchlist(id: number): Promise<void> {
-  return fetch(`${BASE}/watchlist/${id}`, { method: 'DELETE' }).then((r) =>
-    handle<void>(r),
-  )
+  return fetch(`${BASE}/watchlist/${id}`, {
+    method: 'DELETE',
+    headers: authHeaders(),
+  }).then((r) => handle<void>(r))
 }
