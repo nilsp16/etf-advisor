@@ -7,6 +7,7 @@ import de.dhbwravensburg.etfadvisor.entity.Role;
 import de.dhbwravensburg.etfadvisor.entity.User;
 import de.dhbwravensburg.etfadvisor.repository.UserRepository;
 import de.dhbwravensburg.etfadvisor.security.JwtUtil;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -31,6 +32,7 @@ public class AuthController {
         this.jwtUtil = util;
     }
 
+    @Operation(summary = "Register a new user account")
     @PostMapping("/register")
     public AuthResponse register(@RequestBody RegisterRequest request){
         var password = passwordEncoder.encode(request.password());
@@ -40,6 +42,7 @@ public class AuthController {
         return new AuthResponse(token);
     }
 
+    @Operation(summary = "Login and receive a JWT token")
     @PostMapping("/login")
     public AuthResponse login(@RequestBody AuthRequest request) {
         var user = userRepository.findByUsername(request.username()).orElseThrow(()->new UsernameNotFoundException("User not found"));
