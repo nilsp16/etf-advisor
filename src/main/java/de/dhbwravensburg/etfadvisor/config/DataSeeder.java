@@ -1,17 +1,26 @@
 package de.dhbwravensburg.etfadvisor.config;
 
 import de.dhbwravensburg.etfadvisor.entity.Etf;
+import de.dhbwravensburg.etfadvisor.entity.Role;
+import de.dhbwravensburg.etfadvisor.entity.User;
 import de.dhbwravensburg.etfadvisor.repository.EtfRepository;
+import de.dhbwravensburg.etfadvisor.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class DataSeeder {
 
     @Bean
-    CommandLineRunner seedEtf(EtfRepository repository){
+    CommandLineRunner seedEtf(EtfRepository repository, UserRepository userRepository, PasswordEncoder passwordEncoder){
         return args -> {
+            // Users
+            if (userRepository.count() == 0) {
+                userRepository.save(new User(null, "admin",
+                        passwordEncoder.encode("admin123"), Role.ADMIN));
+            }
             if( repository.count()>0){
                 return;
             }
