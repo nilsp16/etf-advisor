@@ -483,3 +483,130 @@ button.icon {
   padding: 0.6rem 0.8rem;
   font-size: 1rem;
 }
+
+/* Price Chart */
+.chart-container {
+  margin: 1.2rem 0;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.8rem;
+}
+
+.chart-header h3 {
+  margin: 0;
+}
+
+.chart-change {
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+  display: inline-block;
+}
+
+.chart-change--up { color: var(--buy); }
+.chart-change--down { color: var(--sell); }
+
+.timeframe-selector {
+  display: flex;
+  gap: 0.2rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.2rem;
+}
+
+.tf-btn {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  padding: 0.3rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.tf-btn:hover {
+  color: var(--text);
+  opacity: 1;
+}
+
+.tf-btn--active {
+  background: var(--accent);
+  color: var(--row-selected-text);
+}
+
+.chart-svg {
+  width: 100%;
+  height: auto;
+}
+
+.chart-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  fill: var(--muted);
+}
+
+/* Filter & Sort bar */
+.watchlist-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1.2rem;
+  padding: 0.8rem 1rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  align-items: center;
+}
+
+.filter-bar, .sort-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 0.3rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.filter-btn:hover {
+  border-color: var(--accent);
+  color: var(--text);
+  opacity: 1;
+}
+
+.filter-btn--active {
+  background: var(--accent);
+  color: var(--row-selected-text);
+  border-color: var(--accent);
+}
+
+.filter-btn--buy.filter-btn--active {
+  background: var(--buy);
+  border-color: var(--buy);
+}
+
+.filter-btn--hold.filter-btn--active {
+  background: var(--hold);
+  border-color: var(--hold);
+  color: #000;
+}
+
+.filter-btn--sell.filter-btn--active {
+  background: var(--sell);
+  border-color: var(--sell);
+}
