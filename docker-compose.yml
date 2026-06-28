@@ -1,0 +1,38 @@
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: etfadvisor
+      POSTGRES_USER: sa
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U sa -d etfadvisor" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+
+  backend:
+    build: .
+    env_file:
+      - Key/MyKeys.env
+    ports:
+      - "8080:8080"
+
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/etfadvisor
+      SPRING_DATASOURCE_USERNAME: sa
+      SPRING_DATASOURCE_PASSWORD: secret
+      ALPACA_API_KEY: ${ALPACA_API_KEY}
+      ALPACA_API_SECRET: ${ALPACA_API_SECRET}
+      NINJAS_API_KEY: ${NINJAS_API_KEY}
+      JWT_SECRET: ${JWT_SECRET:-mein-super-geheimer-schluessel-der-mindestens-32-zeichen-lang-ist}
+    depends_on:
+        - postgres
+
+volumes:
+  pgdata:
